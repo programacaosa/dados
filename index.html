@@ -1,74 +1,93 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkers Game</title>
     <style>
         body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-        }
-        #board {
-            display: grid;
-            grid-template-columns: repeat(8, 50px);
-            grid-template-rows: repeat(8, 50px);
-            gap: 0;
-        }
-        .cell {
-            width: 50px;
-            height: 50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .black {
-            background-color: #8B4513; /* Marrom */
-        }
-        .white {
-            background-color: white;
-        }
-        .piece {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .piece.white {
-            background-color: white;
-        }
-        .piece.black {
-            background-color: black;
-        }
-        .captured-pieces {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .captured-pieces .captured {
-            width: 40px;
-            height: 40px;
-            border: 1px solid black;
-            border-radius: 50%;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-        }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+}
+
+#board {
+    display: grid;
+    grid-template-columns: repeat(8, 11vw); /* Tamanho padrão para telas menores */
+    grid-template-rows: repeat(8, 11vw); /* Tamanho padrão para telas menores */
+    gap: 0;
+    width: 85vw; /* Largura padrão para telas menores */
+    max-width: 400px; /* Largura máxima para telas menores */
+    height: 85vw; /* Altura padrão para telas menores */
+    max-height: 400px; /* Altura máxima para telas menores */
+    border: 10px solid #8B4513; /* Cor de madeira para a borda */
+    border-radius: 10px; /* Bordas arredondadas */
+}
+
+.cell {
+    width: 11vw; /* Tamanho padrão para telas menores */
+    height: 11vw; /* Tamanho padrão para telas menores */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.black {
+    background-color: gray; /* Marrom */
+}
+
+.white {
+    background-color: white;
+}
+
+.piece {
+    width: 9vw; /* Tamanho padrão para peças em telas menores */
+    height: 9vw; /* Tamanho padrão para peças em telas menores */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #333; /* Borda escura para efeito de destaque */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Sombra para efeito de profundidade */
+}
+
+.piece.white {
+    background-color: #fff; /* Branco para peças brancas */
+    color: #000; /* Cor do texto para peças brancas, se necessário */
+}
+
+.piece.black {
+    background-color: #333; /* Preto para peças pretas */
+    color: #fff; /* Cor do texto para peças pretas, se necessário */
+}
+
+/* Media query para telas maiores que 600px (PC) */
+@media (min-width: 600px) {
+    #board {
+        grid-template-columns: repeat(8, 50px); /* Tamanho maior para telas maiores (PC) */
+        grid-template-rows: repeat(8, 50px); /* Tamanho maior para telas maiores (PC) */
+        width: 400px; /* Largura fixa para telas maiores (PC) */
+        height: 400px; /* Altura fixa para telas maiores (PC) */
+    }
+    .cell {
+        width: 50px; /* Tamanho maior para telas maiores (PC) */
+        height: 50px; /* Tamanho maior para telas maiores (PC) */
+    }
+    .piece {
+        width: 40px; /* Tamanho maior para peças em telas maiores (PC) */
+        height: 40px; /* Tamanho maior para peças em telas maiores (PC) */
+        border: 2px solid #333; /* Borda escura para efeito de destaque */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Sombra para efeito de profundidade */
+    }
+}
+
     </style>
 </head>
 <body>
     <div id="board"></div>
-    <div class="captured-pieces">
-        <div id="captured-black"></div>
-        <div id="captured-white"></div>
-    </div>
     <!-- Adicione a referência ao Socket.IO -->
     <script src="/socket.io/socket.io.js"></script>
     <script src="client.js"></script>
