@@ -2,10 +2,6 @@ const socket = io();
 
 const board = document.getElementById('board');
 let selectedPiece = null;
-let capturedPieces = {
-    black: [],
-    white: []
-};
 
 function createBoard() {
     for (let i = 0; i < 8; i++) {
@@ -45,9 +41,7 @@ function addPiece(row, col, color) {
 
 function onCellClick(row, col) {
     if (selectedPiece) {
-        if (canMove(selectedPiece.row, selectedPiece.col, row, col)) {
-            movePiece(selectedPiece.row, selectedPiece.col, row, col);
-        }
+        movePiece(selectedPiece.row, selectedPiece.col, row, col);
         selectedPiece = null;
     } else {
         const piece = getPiece(row, col);
@@ -62,34 +56,6 @@ function getPiece(row, col) {
     return cell ? cell.querySelector('.piece') : null;
 }
 
-function canMove(fromRow, fromCol, toRow, toCol) {
-    const fromPiece = getPiece(fromRow, fromCol);
-    const toPiece = getPiece(toRow, toCol);
-
-    // Não pode mover para um quadrado que já tem uma peça da mesma cor
-    if (toPiece && fromPiece.classList.contains(toPiece.classList[1])) {
-        return false;
-    }
-
-    // Verifica se é um movimento de captura
-    if (Math.abs(toRow - fromRow) === 2 && Math.abs(toCol - fromCol) === 2) {
-        const capturedRow = (fromRow + toRow) / 2;
-        const capturedCol = (fromCol + toCol) / 2;
-        const capturedPiece = getPiece(capturedRow, capturedCol);
-        if (capturedPiece && !fromPiece.classList.contains(capturedPiece.classList[1])) {
-            return true;
-        }
-        return false;
-    }
-
-    // Movimentos simples são permitidos apenas se o quadrado de destino estiver vazio
-    if (!toPiece && Math.abs(toRow - fromRow) === 1 && Math.abs(toCol - fromCol) === 1) {
-        return true;
-    }
-
-    return false;
-}
-
 function movePiece(fromRow, fromCol, toRow, toCol) {
     const fromCell = board.querySelector(`.cell[data-row="${fromRow}"][data-col="${fromCol}"]`);
     const toCell = board.querySelector(`.cell[data-row="${toRow}"][data-col="${toCol}"]`);
@@ -101,9 +67,6 @@ function movePiece(fromRow, fromCol, toRow, toCol) {
         const capturedPiece = getPiece(capturedRow, capturedCol);
         if (capturedPiece) {
             capturedPiece.remove();
-            const capturedColor = capturedPiece.classList[1];
-            capturedPieces[capturedColor].push(capturedPiece);
-            updateCapturedPiecesDisplay();
         }
     }
 
@@ -114,22 +77,6 @@ function movePiece(fromRow, fromCol, toRow, toCol) {
             socket.emit('move', { fromRow, fromCol, toRow, toCol });
         }
     }
-}
-
-function updateCapturedPiecesDisplay() {
-    const capturedBlackDiv = document.getElementById('captured-black');
-    const capturedWhiteDiv = document.getElementById('captured-white');
-
-    capturedBlackDiv.innerHTML = '';
-    capturedWhiteDiv.innerHTML = '';
-
-    capturedPieces.black.forEach(piece => {
-        capturedBlackDiv.appendChild(piece.cloneNode(true));
-    });
-
-    capturedPieces.white.forEach(piece => {
-        capturedWhiteDiv.appendChild(piece.cloneNode(true));
-    });
 }
 
 socket.on('move', (data) => {
