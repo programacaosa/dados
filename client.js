@@ -2,6 +2,7 @@ const socket = io();
 
 const board = document.getElementById('board');
 let selectedPiece = null;
+const moveSound = new Audio('som.mp3'); // Caminho para o arquivo de áudio no diretório raiz
 
 function createBoard() {
     for (let i = 0; i < 8; i++) {
@@ -32,10 +33,13 @@ function createBoard() {
 function addPiece(row, col, color) {
     const cell = board.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
     if (cell) {
-        const piece = document.createElement('div');
-        piece.classList.add('piece');
-        piece.classList.add(color);
-        cell.appendChild(piece);
+        const existingPiece = cell.querySelector('.piece');
+        if (!existingPiece) { // Adiciona a peça somente se não houver uma peça na célula
+            const piece = document.createElement('div');
+            piece.classList.add('piece');
+            piece.classList.add(color);
+            cell.appendChild(piece);
+        }
     }
 }
 
@@ -74,6 +78,7 @@ function movePiece(fromRow, fromCol, toRow, toCol) {
         const piece = fromCell.querySelector('.piece');
         if (piece) {
             toCell.appendChild(piece);
+            moveSound.play(); // Toca o som de movimento
             socket.emit('move', { fromRow, fromCol, toRow, toCol });
         }
     }
