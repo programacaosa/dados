@@ -1,88 +1,91 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkers Game</title>
     <style>
         body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    background-color: #f0f0f0;
-}
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-image: url('https://cdn.hentaigifz.com/84324/hentai-sex.gif'); /* Substitua pela URL da sua imagem de fundo */
+            background-size: cover; /* Cobre toda a tela */
+            background-position: center; /* Centraliza a imagem */
+            background-repeat: no-repeat; /* Evita a repetição da imagem */
+        }
 
-#board {
-    display: grid;
-    grid-template-columns: repeat(8, 11vw); /* Tamanho padrão para telas menores */
-    grid-template-rows: repeat(8, 11vw); /* Tamanho padrão para telas menores */
-    gap: 0;
-    width: 85vw; /* Largura padrão para telas menores */
-    max-width: 400px; /* Largura máxima para telas menores */
-    height: 85vw; /* Altura padrão para telas menores */
-    max-height: 400px; /* Altura máxima para telas menores */
-    border: 10px solid #8B4513; /* Cor de madeira para a borda */
-    border-radius: 10px; /* Bordas arredondadas */
-}
+        #board {
+            display: grid;
+            grid-template-columns: repeat(8, 11vw); /* Tamanho padrão para telas menores */
+            grid-template-rows: repeat(8, 11vw); /* Tamanho padrão para telas menores */
+            gap: 0;
+            width: 85vw; /* Largura padrão para telas menores */
+            max-width: 400px; /* Largura máxima para telas menores */
+            height: 85vw; /* Altura padrão para telas menores */
+            max-height: 400px; /* Altura máxima para telas menores */
+            border: 10px solid #8B4513; /* Cor de madeira para a borda */
+            border-radius: 10px; /* Bordas arredondadas */
+        }
 
-.cell {
-    width: 11vw; /* Tamanho padrão para telas menores */
-    height: 11vw; /* Tamanho padrão para telas menores */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+        .cell {
+            width: 11vw; /* Tamanho padrão para telas menores */
+            height: 11vw; /* Tamanho padrão para telas menores */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-.black {
-    background-color: gray; /* Marrom */
-}
+        .black {
+            background-color: gray; /* Marrom */
+        }
 
-.white {
-    background-color: white;
-}
+        .white {
+            background-color: white;
+        }
 
-.piece {
-    width: 9vw; /* Tamanho padrão para peças em telas menores */
-    height: 9vw; /* Tamanho padrão para peças em telas menores */
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 2px solid #333; /* Borda escura para efeito de destaque */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Sombra para efeito de profundidade */
-}
+        .piece {
+            width: 9vw; /* Tamanho padrão para peças em telas menores */
+            height: 9vw; /* Tamanho padrão para peças em telas menores */
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid #333; /* Borda escura para efeito de destaque */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Sombra para efeito de profundidade */
+        }
 
-.piece.white {
-    background-color: #fff; /* Branco para peças brancas */
-    color: #000; /* Cor do texto para peças brancas, se necessário */
-}
+        .piece.white {
+            background-color: #fff; /* Branco para peças brancas */
+            color: #000; /* Cor do texto para peças brancas, se necessário */
+        }
 
-.piece.black {
-    background-color: #333; /* Preto para peças pretas */
-    color: #fff; /* Cor do texto para peças pretas, se necessário */
-}
+        .piece.black {
+            background-color: #333; /* Preto para peças pretas */
+            color: #fff; /* Cor do texto para peças pretas, se necessário */
+        }
 
-/* Media query para telas maiores que 600px (PC) */
-@media (min-width: 600px) {
-    #board {
-        grid-template-columns: repeat(8, 50px); /* Tamanho maior para telas maiores (PC) */
-        grid-template-rows: repeat(8, 50px); /* Tamanho maior para telas maiores (PC) */
-        width: 400px; /* Largura fixa para telas maiores (PC) */
-        height: 400px; /* Altura fixa para telas maiores (PC) */
-    }
-    .cell {
-        width: 50px; /* Tamanho maior para telas maiores (PC) */
-        height: 50px; /* Tamanho maior para telas maiores (PC) */
-    }
-    .piece {
-        width: 40px; /* Tamanho maior para peças em telas maiores (PC) */
-        height: 40px; /* Tamanho maior para peças em telas maiores (PC) */
-        border: 2px solid #333; /* Borda escura para efeito de destaque */
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Sombra para efeito de profundidade */
-    }
-}
+        /* Media query para telas maiores que 600px (PC) */
+        @media (min-width: 600px) {
+            #board {
+                grid-template-columns: repeat(8, 50px); /* Tamanho maior para telas maiores (PC) */
+                grid-template-rows: repeat(8, 50px); /* Tamanho maior para telas maiores (PC) */
+                width: 400px; /* Largura fixa para telas maiores (PC) */
+                height: 400px; /* Altura fixa para telas maiores (PC) */
+            }
+            .cell {
+                width: 50px; /* Tamanho maior para telas maiores (PC) */
+                height: 50px; /* Tamanho maior para telas maiores (PC) */
+            }
+            .piece {
+                width: 40px; /* Tamanho maior para peças em telas maiores (PC) */
+                height: 40px; /* Tamanho maior para peças em telas maiores (PC) */
+                border: 2px solid #333; /* Borda escura para efeito de destaque */
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Sombra para efeito de profundidade */
+            }
+        }
 
     </style>
 </head>
