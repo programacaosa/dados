@@ -44,9 +44,16 @@ function addPiece(row, col, color) {
 }
 
 function onCellClick(row, col) {
+    const cell = board.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
     if (selectedPiece) {
-        movePiece(selectedPiece.row, selectedPiece.col, row, col);
-        selectedPiece = null;
+        const piece = selectedPiece.piece;
+        // Verificar se a célula de destino já está ocupada por outra peça
+        if (!getPiece(row, col) && isValidMove(selectedPiece.row, selectedPiece.col, row, col, piece.classList.contains('white'))) {
+            movePiece(selectedPiece.row, selectedPiece.col, row, col);
+            selectedPiece = null;
+        } else {
+            selectedPiece = null; // Deselect piece if the move is invalid
+        }
     } else {
         const piece = getPiece(row, col);
         if (piece) {
@@ -82,6 +89,33 @@ function movePiece(fromRow, fromCol, toRow, toCol) {
             socket.emit('move', { fromRow, fromCol, toRow, toCol });
         }
     }
+}
+
+function isValidMove(fromRow, fromCol, toRow, toCol, isWhite) {
+    const rowDiff = toRow - fromRow;
+    const colDiff = Math.abs(toCol - fromCol);
+
+    // Verifica se o movimento é para uma célula preta
+    const toCell = board.querySelector(`.cell[data-row="${toRow}"][data-col="${toCol}"]`);
+    if (!toCell || !toCell.classList.contains('black')) return false;
+
+    // Movimentos normais (não captura)
+    if (colDiff === 1 && ((isWhite && rowDiff === -1) || (!isWhite && rowDiff === 1))) {
+        return true;
+    }
+
+    // Movimentos de captura
+    if (colDiff === 2 && ((isWhite && rowDiff === -2) || (!isWhite && rowDiff === 2))) {
+        const capturedRow = (fromRow + toRow) / 2;
+        const capturedCol = (fromCol + toCol) / 2;
+        const capturedPiece = getPiece(capturedRow, capturedCol);
+
+        if (capturedPiece && capturedPiece.classList.contains(isWhite ? 'black' : 'white')) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 socket.on('move', (data) => {
