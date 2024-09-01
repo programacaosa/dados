@@ -93,42 +93,6 @@
     <div id="board"></div>
     <!-- Adicione a referência ao Socket.IO -->
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-        const boardElement = document.getElementById('board');
-        const boardSize = 8;
-
-        // Função para criar o tabuleiro e as peças
-        function createBoard() {
-            for (let row = 0; row < boardSize; row++) {
-                for (let col = 0; col < boardSize; col++) {
-                    const cell = document.createElement('div');
-                    cell.classList.add('cell');
-
-                    // Adiciona classes para células brancas e pretas
-                    if ((row + col) % 2 === 0) {
-                        cell.classList.add('white');
-                    } else {
-                        cell.classList.add('black');
-
-                        // Adiciona peças apenas nas três primeiras e últimas linhas
-                        if (row < 3) {
-                            const piece = document.createElement('div');
-                            piece.classList.add('piece', 'black');
-                            cell.appendChild(piece);
-                        } else if (row > 4) {
-                            const piece = document.createElement('div');
-                            piece.classList.add('piece', 'white');
-                            cell.appendChild(piece);
-                        }
-                    }
-
-                    boardElement.appendChild(cell);
-                }
-            }
-        }
-
-        // Cria o tabuleiro e posiciona as peças
-        createBoard();
-    </script>
+    <script src="client.js"></script>
 </body>
 </html>
