@@ -27,8 +27,9 @@
             max-width: 400px;
             height: 85vw;
             max-height: 400px;
-            border: 10px solid #8B4513;
+            border: 5px solid #8B4513; /* Borda marrom clara em torno de todo o tabuleiro */
             border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Adicionando sombra ao redor do tabuleiro */
         }
 
         .cell {
@@ -37,6 +38,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            border: 1px solid #8B4513; /* Borda fina ao redor das células */
         }
 
         .black {
@@ -68,27 +70,43 @@
             color: #fff;
         }
 
-        /* Estilo para os contadores de peças capturadas */
         .captured-info {
             font-family: 'Roboto', sans-serif;
             font-size: 16px;
             font-weight: bold;
             color: white;
-            background: linear-gradient(135deg, #ff7e5f, #feb47b); /* Gradiente suave */
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
             padding: 12px 24px;
             margin: 10px;
             border-radius: 15px;
             text-align: center;
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Efeito de transição */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .captured-info:hover {
-            transform: scale(1.05); /* Efeito de ampliação ao passar o mouse */
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* Sombras mais intensas */
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
         @media (min-width: 600px) {
+            #board {
+                grid-template-columns: repeat(8, 50px);
+                grid-template-rows: repeat(8, 50px);
+                width: 400px;
+                height: 400px;
+            }
+
+            .cell {
+                width: 50px;
+                height: 50px;
+            }
+
+            .piece {
+                width: 40px;
+                height: 40px;
+            }
+
             .captured-info {
                 font-size: 20px;
                 padding: 16px 32px;
@@ -98,7 +116,7 @@
 </head>
 <body>
     <div id="board"></div>
-    
+
     <!-- Contadores de peças capturadas -->
     <div class="captured-info" id="whiteCaptured">Peças capturadas (Brancas): 0</div>
     <div class="captured-info" id="blackCaptured">Peças capturadas (Pretas): 0</div>
@@ -106,57 +124,5 @@
     <!-- Referência ao Socket.IO -->
     <script src="/socket.io/socket.io.js"></script>
     <script src="client.js"></script>
-    
-    <script>
-        let whiteCapturedCount = 0;
-        let blackCapturedCount = 0;
-        const whiteCapturedArea = document.getElementById('whiteCaptured');
-        const blackCapturedArea = document.getElementById('blackCaptured');
-
-        function updateCapturedCount() {
-            whiteCapturedArea.textContent = `Peças capturadas (Brancas): ${whiteCapturedCount}`;
-            blackCapturedArea.textContent = `Peças capturadas (Pretas): ${blackCapturedCount}`;
-        }
-
-        function movePiece(fromRow, fromCol, toRow, toCol) {
-            const fromCell = board.querySelector(`.cell[data-row="${fromRow}"][data-col="${fromCol}"]`);
-            const toCell = board.querySelector(`.cell[data-row="${toRow}"][data-col="${toCol}"]`);
-
-            // Verifica se é um movimento de captura
-            if (Math.abs(toRow - fromRow) === 2 && Math.abs(toCol - fromCol) === 2) {
-                const capturedRow = (fromRow + toRow) / 2;
-                const capturedCol = (fromCol + toCol) / 2;
-                const capturedPiece = getPiece(capturedRow, capturedCol);
-                if (capturedPiece) {
-                    capturedPiece.remove();  // Remove a peça capturada
-
-                    // Atualizar a contagem de peças capturadas
-                    const capturedColor = capturedPiece.classList.contains('white') ? 'white' : 'black';
-                    if (capturedColor === 'white') {
-                        whiteCapturedCount++;
-                    } else {
-                        blackCapturedCount++;
-                    }
-
-                    updateCapturedCount(); // Atualiza os contadores
-                }
-            }
-
-            if (fromCell && toCell) {
-                const piece = fromCell.querySelector('.piece');
-                if (piece) {
-                    toCell.appendChild(piece);
-                    moveSound.play(); // Toca o som de movimento
-                    socket.emit('move', { fromRow, fromCol, toRow, toCol });
-                }
-            }
-        }
-
-        // Função para obter a peça de uma célula
-        function getPiece(row, col) {
-            const cell = board.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
-            return cell ? cell.querySelector('.piece') : null;
-        }
-    </script>
 </body>
 </html>
