@@ -4,6 +4,14 @@ const board = document.getElementById('board');
 let selectedPiece = null;
 const moveSound = new Audio('som.mp3'); // Caminho para o arquivo de áudio no diretório raiz
 
+// Contadores de peças capturadas
+let whiteCapturedCount = 0;
+let blackCapturedCount = 0;
+
+// Referências para as áreas de captura
+const whiteCapturedArea = document.getElementById('whiteCaptured');
+const blackCapturedArea = document.getElementById('blackCaptured');
+
 function createBoard() {
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
@@ -78,6 +86,16 @@ function movePiece(fromRow, fromCol, toRow, toCol) {
         const capturedPiece = getPiece(capturedRow, capturedCol);
         if (capturedPiece) {
             capturedPiece.remove();
+
+            // Atualizar a contagem de peças capturadas
+            const capturedColor = capturedPiece.classList.contains('white') ? 'white' : 'black';
+            if (capturedColor === 'white') {
+                whiteCapturedCount++;
+                whiteCapturedArea.textContent = `Peças capturadas (Brancas): ${whiteCapturedCount}`;
+            } else {
+                blackCapturedCount++;
+                blackCapturedArea.textContent = `Peças capturadas (Pretas): ${blackCapturedCount}`;
+            }
         }
     }
 
@@ -90,6 +108,7 @@ function movePiece(fromRow, fromCol, toRow, toCol) {
         }
     }
 }
+
 
 function isValidMove(fromRow, fromCol, toRow, toCol, isWhite) {
     const rowDiff = toRow - fromRow;
