@@ -7,39 +7,40 @@
     <style>
         body {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-image: url('https://xgifsbr.com/wp-content/uploads/2020/12/sexo-hentai-30.gif'); /* Substitua pela URL da sua imagem de fundo */
-            background-size: cover; /* Cobre toda a tela */
-            background-position: center; /* Centraliza a imagem */
-            background-repeat: no-repeat; /* Evita a repetição da imagem */
+            background-image: url('https://xgifsbr.com/wp-content/uploads/2020/12/sexo-hentai-30.gif');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
 
         #board {
             display: grid;
-            grid-template-columns: repeat(8, 11vw); /* Tamanho padrão para telas menores */
-            grid-template-rows: repeat(8, 11vw); /* Tamanho padrão para telas menores */
+            grid-template-columns: repeat(8, 11vw);
+            grid-template-rows: repeat(8, 11vw);
             gap: 0;
-            width: 85vw; /* Largura padrão para telas menores */
-            max-width: 400px; /* Largura máxima para telas menores */
-            height: 85vw; /* Altura padrão para telas menores */
-            max-height: 400px; /* Altura máxima para telas menores */
-            border: 10px solid #8B4513; /* Cor de madeira para a borda */
-            border-radius: 10px; /* Bordas arredondadas */
+            width: 85vw;
+            max-width: 400px;
+            height: 85vw;
+            max-height: 400px;
+            border: 10px solid #8B4513;
+            border-radius: 10px;
         }
 
         .cell {
-            width: 11vw; /* Tamanho padrão para telas menores */
-            height: 11vw; /* Tamanho padrão para telas menores */
+            width: 11vw;
+            height: 11vw;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
         .black {
-            background-color: gray; /* Marrom */
+            background-color: gray;
         }
 
         .white {
@@ -47,52 +48,115 @@
         }
 
         .piece {
-            width: 9vw; /* Tamanho padrão para peças em telas menores */
-            height: 9vw; /* Tamanho padrão para peças em telas menores */
+            width: 9vw;
+            height: 9vw;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            border: 2px solid #333; /* Borda escura para efeito de destaque */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Sombra para efeito de profundidade */
+            border: 2px solid #333;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .piece.white {
-            background-color: #fff; /* Branco para peças brancas */
-            color: #000; /* Cor do texto para peças brancas, se necessário */
+            background-color: #fff;
+            color: #000;
         }
 
         .piece.black {
-            background-color: #333; /* Preto para peças pretas */
-            color: #fff; /* Cor do texto para peças pretas, se necessário */
+            background-color: #333;
+            color: #fff;
         }
 
-        /* Media query para telas maiores que 600px (PC) */
+        /* Estilo para os contadores de peças capturadas */
+        .captured-info {
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #ff7e5f, #feb47b); /* Gradiente suave */
+            padding: 12px 24px;
+            margin: 10px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Efeito de transição */
+        }
+
+        .captured-info:hover {
+            transform: scale(1.05); /* Efeito de ampliação ao passar o mouse */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* Sombras mais intensas */
+        }
+
         @media (min-width: 600px) {
-            #board {
-                grid-template-columns: repeat(8, 50px); /* Tamanho maior para telas maiores (PC) */
-                grid-template-rows: repeat(8, 50px); /* Tamanho maior para telas maiores (PC) */
-                width: 400px; /* Largura fixa para telas maiores (PC) */
-                height: 400px; /* Altura fixa para telas maiores (PC) */
-            }
-            .cell {
-                width: 50px; /* Tamanho maior para telas maiores (PC) */
-                height: 50px; /* Tamanho maior para telas maiores (PC) */
-            }
-            .piece {
-                width: 40px; /* Tamanho maior para peças em telas maiores (PC) */
-                height: 40px; /* Tamanho maior para peças em telas maiores (PC) */
-                border: 2px solid #333; /* Borda escura para efeito de destaque */
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Sombra para efeito de profundidade */
+            .captured-info {
+                font-size: 20px;
+                padding: 16px 32px;
             }
         }
-
     </style>
 </head>
 <body>
     <div id="board"></div>
-    <!-- Adicione a referência ao Socket.IO -->
+    
+    <!-- Contadores de peças capturadas -->
+    <div class="captured-info" id="whiteCaptured">Peças capturadas (Brancas): 0</div>
+    <div class="captured-info" id="blackCaptured">Peças capturadas (Pretas): 0</div>
+
+    <!-- Referência ao Socket.IO -->
     <script src="/socket.io/socket.io.js"></script>
     <script src="client.js"></script>
+    
+    <script>
+        let whiteCapturedCount = 0;
+        let blackCapturedCount = 0;
+        const whiteCapturedArea = document.getElementById('whiteCaptured');
+        const blackCapturedArea = document.getElementById('blackCaptured');
+
+        function updateCapturedCount() {
+            whiteCapturedArea.textContent = `Peças capturadas (Brancas): ${whiteCapturedCount}`;
+            blackCapturedArea.textContent = `Peças capturadas (Pretas): ${blackCapturedCount}`;
+        }
+
+        function movePiece(fromRow, fromCol, toRow, toCol) {
+            const fromCell = board.querySelector(`.cell[data-row="${fromRow}"][data-col="${fromCol}"]`);
+            const toCell = board.querySelector(`.cell[data-row="${toRow}"][data-col="${toCol}"]`);
+
+            // Verifica se é um movimento de captura
+            if (Math.abs(toRow - fromRow) === 2 && Math.abs(toCol - fromCol) === 2) {
+                const capturedRow = (fromRow + toRow) / 2;
+                const capturedCol = (fromCol + toCol) / 2;
+                const capturedPiece = getPiece(capturedRow, capturedCol);
+                if (capturedPiece) {
+                    capturedPiece.remove();  // Remove a peça capturada
+
+                    // Atualizar a contagem de peças capturadas
+                    const capturedColor = capturedPiece.classList.contains('white') ? 'white' : 'black';
+                    if (capturedColor === 'white') {
+                        whiteCapturedCount++;
+                    } else {
+                        blackCapturedCount++;
+                    }
+
+                    updateCapturedCount(); // Atualiza os contadores
+                }
+            }
+
+            if (fromCell && toCell) {
+                const piece = fromCell.querySelector('.piece');
+                if (piece) {
+                    toCell.appendChild(piece);
+                    moveSound.play(); // Toca o som de movimento
+                    socket.emit('move', { fromRow, fromCol, toRow, toCol });
+                }
+            }
+        }
+
+        // Função para obter a peça de uma célula
+        function getPiece(row, col) {
+            const cell = board.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
+            return cell ? cell.querySelector('.piece') : null;
+        }
+    </script>
 </body>
 </html>
